@@ -79,6 +79,7 @@ class BikeRental:
             print("You will be charged $5 for each hour per bike.")
             print("We hope that you enjoy our service.")
             self.stock[bikeType] -= n
+            self.intTotalRented+=n
             return now      
      
     def rentBikeOnDailyBasis(self, n, bikeType):
@@ -102,6 +103,7 @@ class BikeRental:
             print("You will be charged $20 for each day per bike.")
             print("We hope that you enjoy our service.")
             self.stock[bikeType] -= n
+            self.intTotalRented+=n
             return now
         
     def rentBikeOnWeeklyBasis(self, n, bikeType):
@@ -125,6 +127,7 @@ class BikeRental:
             print("You will be charged $60 for each week per bike.")
             print("We hope that you enjoy our service.")
             self.stock[bikeType] -= n
+            self.intTotalRented+=n
             return now
     
     
