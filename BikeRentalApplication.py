@@ -14,6 +14,7 @@ def appStart():
     runApp(bikeshop1)
 
 def runApp(bikeshop):
+    customers = []
     blnRun = True
     while blnRun:
         print("\n\n-------------Bikeshop Menu------------------")
@@ -27,8 +28,14 @@ def runApp(bikeshop):
         
         if menuInput == 1:
             print("\n------------------New Customer------------------")
+            customer = Customer("Anton", 12345)
+            customers.append(customer)
+            customer = Customer("Bob", 12343)
+            customers.append(customer)
         elif menuInput == 2:
             print("\n------------------Rental Return------------------")
+            customerID = int(input("Enter Customer's ID Number: "))
+            findCustomer(customers, customerID)
         elif menuInput == 3:
             print("\n------------------Available Inventory------------------")
             bikeshop.displaystock()
@@ -40,7 +47,12 @@ def runApp(bikeshop):
             print("\nGood Bye! \nSee you Tommorow!")
             blnRun = False
 
-
+def findCustomer(listOfCustomers, id):
+    for customer in listOfCustomers:
+        if id == customer.idNumber:
+            print(customer.name)
+            return customer
+    
 
 
 
