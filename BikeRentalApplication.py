@@ -23,10 +23,17 @@ def runApp(bikeshop):
         print("Press 4 to SEE DAILY STATISTICS")
         print("Pess 5 to EXIT")
         menuInput = int(input(""))
+
+        
         if menuInput == 1:
-            print("\n------New Customer---")
-        elif menuInput ==4:
-            print("\nDaily Statistics")
+            print("\n------------------New Customer------------------")
+        elif menuInput == 2:
+            print("\n------------------Rental Return------------------")
+        elif menuInput == 3:
+            print("\n------------------Available Inventory------------------")
+            bikeshop.displaystock()
+        elif menuInput == 4:
+            print("\n------------------Daily Statistics------------------")
             print("Total Bikes Rented for Day:", bikeshop.intTotalRented)
             print("Total Revenue Collected for Day: $",bikeshop.dblTotalColected)
         elif menuInput == 5:
