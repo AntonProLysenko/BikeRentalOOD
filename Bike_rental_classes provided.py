@@ -139,11 +139,11 @@ class BikeRental:
         """
        
         # extract the tuple and initiate bill
-        rentalTime, rentalBasis, numOfBikes = request
+        rentalTime, rentalBasis, numOfBikes, typeOFBikes = request
         bill = 0
         # issue a bill only if all three parameters are not null!
-        if rentalTime and rentalBasis and numOfBikes:
-            self.stock += numOfBikes
+        if rentalTime and rentalBasis and numOfBikes and typeOFBikes and typeOFBikes in self.arrAvailableTypes:
+            self.stock[typeOFBikes] += numOfBikes
             now = datetime.now()
             rentalPeriod = now - rentalTime
         
