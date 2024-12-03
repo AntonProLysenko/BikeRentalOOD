@@ -18,13 +18,13 @@ class BikeRental:
     @stock.setter
     def stock(self, stock):
         blnValid = False
-        if type(stock) == "dict":
-            for key, val in stock:
+        if type(stock) == dict:
+            for key,val in stock.items():
                 if key in self.arrAvailableTypes:
                     blnValid = True
                 else:
                     blnValid = False
-                    raise Exception("Invalid Bike type entered, Stock has to be a dectionaty of 3 key value pairs of 'mountain', 'touring' and 'road', with value of the amount of bikes available!\n You entered: {}",format(key))
+                    raise Exception("Invalid Bike type entered, Stock has to be a dictionaty of 3 key value pairs of 'mountain', 'touring' and 'road', with value of the amount of bikes available!\n You entered: {}".format(key))
 
                 if val < 0:
                     blnValid = False
@@ -33,7 +33,7 @@ class BikeRental:
                     blnValid = True
         else:
             blnValid = False
-            raise Exception("Invalid Shop Stock datatype! Stock has to be a dectionaty of 3 key value pairs of 'mountain', 'touring' and 'road', with value of the amount of bikes available!\n You entered: {}",format(stock))
+            raise Exception("Invalid Shop Stock datatype! Stock has to be a dectionaty of 3 key value pairs of 'mountain', 'touring' and 'road', with value of the amount of bikes available!\n You entered: {}".format(stock))
         if blnValid:
             self.__stock = stock
     
@@ -55,7 +55,7 @@ class BikeRental:
         """
         Rents a bike on hourly basis to a customer.
         """
-        bikeType.lower().trim()
+        bikeType.lower().strip()
         # reject invalid input 
         if n <= 0:
             print("Number of bikes should be positive!")
@@ -86,17 +86,17 @@ class BikeRental:
         """
         Rents a bike on daily basis to a customer.
         """
-        bikeType.lower().trim()
+        bikeType.lower().strip()
         if n <= 0:
             print("Number of bikes should be positive!")
+            return None
+        elif bikeType not in self.arrAvailableTypes:
+            print("Invalid bike type".format(self.stock))
             return None
         elif n > self.stock[bikeType]:
             print("Sorry! We have currently have {} {} bikes available to rent.".format(self.stock[bikeType], bikeType))
             return None
         
-        elif bikeType not in self.arrAvailableTypes:
-            print("Invalid bike type".format(self.stock))
-            return None
         else:
             now = datetime.now()                      
             print("You have rented {} bike(s) on daily basis today at {} hours.".format(n, now.hour))
@@ -110,16 +110,16 @@ class BikeRental:
         """
         Rents a bike on weekly basis to a customer.
         """
-        bikeType.trim().lower()
+        bikeType.strip().lower()
 
         if n <= 0:
             print("Number of bikes should be positive!")
             return None
-        elif n > self.stock[bikeType]:
-            print("Sorry! We have currently have {} {} bikes available to rent.".format(self.stock[bikeType]).format(bikeType))
-            return None
         elif bikeType not in self.arrAvailableTypes:
             print("Invalid bike type".format(self.stock))
+            return None
+        elif n > self.stock[bikeType]:
+            print("Sorry! We have currently have {} {} bikes available to rent.".format(self.stock[bikeType], bikeType))
             return None
         else:
             now = datetime.now()
@@ -173,6 +173,7 @@ class BikeRental:
             return None
 
 class Customer:
+    arrCustomerIDs = []
     def __init__(self, name, idNumber):
         """
         Our constructor method which instantiates various customer objects.
@@ -188,13 +189,34 @@ class Customer:
     @property
     def name(self):
         return self.__strName
-    
     @name.setter
     def strName(self, strName):
         if strName == None or strName == "":
             raise Exception(f"Name is required, the value of strFirstName was{strName}")
         else:
             self.__strName = strName
+
+    @property
+    def idNumber(self):
+        return self.__idNumber
+    @idNumber.setter
+    def idNumber(self, idNumber):
+        blnValid = False
+        if type(idNumber) == int:
+            blnValid = True
+        else:
+            raise Exception("idNumber has to be numbers only!")
+
+        if blnValid:
+            if idNumber in Customer.arrCustomerIDs:
+                raise Exception("Customer with this ID Number already Exist")
+            else:
+                blnValid=True
+        if blnValid:
+            Customer.arrCustomerIDs.append(idNumber)
+            self.__idNumber = idNumber
+
+
     
     def requestBike(self):
         """
@@ -223,9 +245,9 @@ class Customer:
 
         if blnValid:
             if self.bikes>0:
-                bikeType = input("What type of bikes you'd like to rent?").trim().lower()
+                bikeType = input("What type of bikes you'd like to rent?").strip().lower()
             else:
-                bikeType = input("What type of bike you'd like to rent?").trim().lower()
+                bikeType = input("What type of bike you'd like to rent?").strip().lower()
             
             if bikeType in self.arrAvailableTypes:
                 blnValid = True
@@ -245,60 +267,68 @@ class Customer:
         """
         Allows customers to return their bikes to the rental shop.
         """
-        if self.rentalBasis and self.rentalTime and self.bikes:
-            return self.rentalTime, self.rentalBasis, self.bikes  
+        if self.rentalBasis and self.rentalTime and self.bikes and self.bikeType:
+            return self.rentalTime, self.rentalBasis, self.bikes,  self.bikeType
         else:
-            return 0,0,0
-        
+            return 0,0,0,0
+
+
+
 # Test Logic
 
 # Create Shops and stock and demonstrate checking inventory
-
-
-shop1 = BikeRental()
+shop1 = BikeRental({'mountain': 12, 'road': 12, 'touring': 32})
 shop2 = BikeRental()
 
 shop1.displaystock()
 
-# shop1.rentBikeOnHourlyBasis(31)
-# shop2.rentBikeOnDailyBasis(-1)
-# shop2.rentBikeOnWeeklyBasis(11)
+shop1.rentBikeOnHourlyBasis(31, "mountain")
+shop2.rentBikeOnDailyBasis(-1, "road")
+shop1.rentBikeOnWeeklyBasis(11,"touring")
+
+shop1.displaystock()
 
 
 
 # Create Customers
  
-# customer1 = Customer()
-# customer2 = Customer()
-# customer3 = Customer()
-# customer4 = Customer()
+customer1 = Customer("Anton", 12345)
+customer2 = Customer("Bob", 54321)
+customer3 = Customer("Kate", 43213)
+customer4 = Customer("Nick", 89432)
 
-# # Set up rental basis
-# customer1.rentalBasis = 1 # hourly
-# customer2.rentalBasis = 1 # hourly
-# customer3.rentalBasis = 2 # daily
-# customer4.rentalBasis = 2 # daily
+# Set up rental basis
+customer1.rentalBasis = 1 # hourly
+customer2.rentalBasis = 1 # hourly
+customer3.rentalBasis = 2 # daily
+customer4.rentalBasis = 2 # daily
 
-# # determine number of bikes
-# customer1.bikes = 1
-# customer2.bikes = 5 # eligible for family discount 30%
-# customer3.bikes = 2
-# customer4.bikes = 0
+# determine number of bikes
+customer1.bikes = 1
+customer2.bikes = 5 # eligible for family discount 30%
+customer3.bikes = 2
+customer4.bikes = 0
 
-# # detrmine rental time
-# customer1.rentalTime = datetime.now() + timedelta(hours=-4)
-# customer2.rentalTime = datetime.now() + timedelta(hours=-23)
-# customer3.rentalTime = datetime.now() + timedelta(days=-4)
-# customer4.rentalTime = datetime.now() + timedelta(days=-14)
+# detrmine rental time
+customer1.rentalTime = datetime.now() + timedelta(hours=-4)
+customer2.rentalTime = datetime.now() + timedelta(hours=-23)
+customer3.rentalTime = datetime.now() + timedelta(days=-4)
+customer4.rentalTime = datetime.now() + timedelta(days=-14)
+# determine bike type
+customer1.bikeType = "mountain" 
+customer2.bikeType = "road" 
+customer3.bikeType = "touring" 
+customer4.bikeType = "road" 
 
-# # create request to return the bike
-# request1 = customer1.returnBike()
-# request2 = customer2.returnBike()
-# request3 = customer3.returnBike()
-# request4 = customer4.returnBike()
-# print("req", customer1.rentalTime)
-# # return the bike to shop and get a bill
-# shop1.returnBike(request1) 
-# shop1.returnBike(request2) 
-# shop1.returnBike(request3) 
-# shop1.returnBike(request4) 
+
+# create request to return the bike
+request1 = customer1.returnBike()
+request2 = customer2.returnBike()
+request3 = customer3.returnBike()
+request4 = customer4.returnBike()
+print("req", request1)
+# return the bike to shop and get a bill
+shop1.returnBike(request1) 
+shop1.returnBike(request2) 
+shop1.returnBike(request3) 
+shop1.returnBike(request4) 
