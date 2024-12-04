@@ -51,25 +51,46 @@ def runApp(bikeshop):
         print("Press 3 to SHOW AVAILABLE INVENTORY")
         print("Press 4 to SEE DAILY STATISTICS")
         print("Pess 5 to EXIT")
-        menuInput = int(input(""))
+        menuInput = input("")
 
         
-        if menuInput == 1:
+        if menuInput == "1":
             print("\n------------------New Customer------------------")
             #Gathering Customer's info
             strCustomerName = input("Enter Customer's Name: ")
-            intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            #intCustomerID = (input("Enter Customer's 5 digit ID: "))
             
             #Input Validation
             while len(strCustomerName)<=0:
                 print("Invalid Customer Name")
                 intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            
+            intCustomerID = (input("Enter Customer's 5 digit ID: "))
 
-            while len(intCustomerID) !=5:
-                 print("Invalid Customer ID")
-                 intCustomerID = (input("Enter Customer's 5 digit ID: "))
-            else:
-                intCustomerID = int(intCustomerID)
+            blnValidID = False
+            while blnValidID ==False:
+                
+
+                if len(intCustomerID) == 5:
+                    if intCustomerID.isdigit():
+                        if int(intCustomerID)>0:
+                            blnValidID = True
+                            intCustomerID = int(intCustomerID)
+                        else:
+                            print("Invalid Customer ID")
+                            intCustomerID = (input("Enter Customer's 5 digit ID: "))
+                            blnValidID ==False
+                    else:
+                        print("Invalid Customer ID")
+                        intCustomerID = (input("Enter Customer's 5 digit ID: "))
+                        blnValidID ==False
+                else:
+                    print("Invalid Customer ID")
+                    intCustomerID = (input("Enter Customer's 5 digit ID: "))
+                    blnValidID ==False
+           
+                    
+        
 
             #If Customer Exist or New Customer
             if intCustomerID in Customer.arrCustomerIDs:
@@ -100,16 +121,40 @@ def runApp(bikeshop):
                         currentCustomer.rentalTime = bikeshop.rentBikeOnWeeklyBasis(customerRequest[0], customerRequest[1])
                 else:
                     print("Invalid choice. Please start the rental process again.")
+               #Validating if request is sucessful
+                if currentCustomer.rentalTime == None:
+                    print ("\t\tUnsuccessful Requets!\nPlease try again!")
+                    currentCustomer.rentalTime = 0
+                    currentCustomer.bikes = 0
+                    currentCustomer.bikeType = 0
+                else:
+                    print("\t\t Great Success!!!")
 
-
-        elif menuInput == 2:
+        elif menuInput == "2":
             print("\n------------------Rental Return------------------")
             intCustomerID = (input("Enter Customer's 5 digit ID: "))
-            while len(intCustomerID) !=5:
-                print("Invalid Customer ID")
-                intCustomerID = (input("Enter Customer's 5 digit ID: "))
-            else:
-                intCustomerID = int(intCustomerID)
+
+            blnValidID = False
+            while blnValidID ==False:
+                
+
+                if len(intCustomerID) == 5:
+                    if intCustomerID.isdigit():
+                        if int(intCustomerID)>0:
+                            blnValidID = True
+                            intCustomerID = int(intCustomerID)
+                        else:
+                            print("Invalid Customer ID")
+                            intCustomerID = (input("Enter Customer's 5 digit ID: "))
+                            blnValidID ==False
+                    else:
+                        print("Invalid Customer ID")
+                        intCustomerID = (input("Enter Customer's 5 digit ID: "))
+                        blnValidID ==False
+                else:
+                    print("Invalid Customer ID")
+                    intCustomerID = (input("Enter Customer's 5 digit ID: "))
+                    blnValidID ==False
 
             currentCustomer = findCustomer(customers, intCustomerID)
             if currentCustomer != False:
@@ -120,11 +165,11 @@ def runApp(bikeshop):
                 request = currentCustomer.returnBike()
                 bikeshop.returnBike(request)
 
-        elif menuInput == 3:
+        elif menuInput == "3":
             print("\n------------------Available Inventory------------------")
             bikeshop.displaystock()
 
-        elif menuInput == 4:
+        elif menuInput == "4":
             
             print("\n------------------Daily Statistics------------------")
             print("Total Bikes Rented for Day:", bikeshop.intTotalRented)
@@ -133,10 +178,12 @@ def runApp(bikeshop):
             for customer in customers:
                 increaseRentDay(customer)
             
-        elif menuInput == 5:
+        elif menuInput == "5":
             #Exits the app
             print("\nGood Bye! \nSee you Tommorow!")
             blnRun = False
+        else:
+            print("Invalid Input!")
 
 def findCustomer(listOfCustomers, id):
     foundCustomer = None

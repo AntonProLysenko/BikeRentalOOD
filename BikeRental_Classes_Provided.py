@@ -236,6 +236,8 @@ class Customer:
         Takes a request from the customer for the number of bikes.
         """
         blnValid = False
+        bikes = str()
+        bikeType = str()
         if self.bikes == 0:
                         
             bikes = input("How many bikes would you like to rent? ")
@@ -244,37 +246,39 @@ class Customer:
             try:
                 bikes = int(bikes)
                 blnValid = True
+            
+                if bikes < 1:
+                    print("\t\tError!\nInvalid input. Number of bikes should be greater than zero!")
+                    blnValid = False
+                    # return -1
+                else:
+                    blnValid = True
+                    #self.bikes = bikes
+
+                if blnValid:
+                    if self.bikes>0:
+                        bikeType = input("What type of bikes you'd like to rent? ").strip().lower()
+                    else:
+                        bikeType = input("What type of bike you'd like to rent? ").strip().lower()
+                
+                    if bikeType in BikeRental.arrAvailableTypes:
+                        blnValid = True
+                        #self.bikeType = bikeType
+                    else:
+                        print("\t\tError!\nInvalid input. You can only rent mountain, road or touring bike from us")
+                        blnValid = False
             except ValueError:
                 print("\t\tError!\nThat's not a positive integer!")
                 blnValid = False
                 # return -1
-            
-            if bikes < 1:
-                print("\t\tError!\nInvalid input. Number of bikes should be greater than zero!")
-                blnValid = False
-                # return -1
-            else:
-                blnValid = True
-                self.bikes = bikes
-
-            if blnValid:
-                if self.bikes>0:
-                    bikeType = input("What type of bikes you'd like to rent? ").strip().lower()
-                else:
-                    bikeType = input("What type of bike you'd like to rent? ").strip().lower()
-                
-                if bikeType in BikeRental.arrAvailableTypes:
-                    blnValid = True
-                    self.bikeType = bikeType
-                else:
-                    print("\t\tError!\nInvalid input. You can only rent mountain, road or touring bike from us")
-                    blnValid = False
         else:
             print(self.strName,"Already has", self.bikes," bikes in use. \nReturn rented inventory first")
             blnValid = False
 
 
         if blnValid:
+            self.bikes = bikes
+            self.bikeType = bikeType
             return self.bikes, self.bikeType
         else:
             return -1
