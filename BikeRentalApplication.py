@@ -2,6 +2,9 @@ import BikeRental_Classes_Provided
 Bikeshop = BikeRental_Classes_Provided.BikeRental
 Customer = BikeRental_Classes_Provided.Customer
 
+import datetime
+from datetime import datetime, timedelta
+
 def appStart():
     """
         Launches the app
@@ -40,8 +43,12 @@ def runApp(bikeshop):
             print("\n------------------New Customer------------------")
             #Gathering Customer's info
             strCustomerName = input("Enter Customer's Name: ")
-            intCustomerID = int(input("Enter Customer's 5 digit ID: "))
-           
+            intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            while len(intCustomerID) !=5:
+                 print("Invalid Customer ID")
+                 intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            else:
+                intCustomerID = int(intCustomerID)
             #If Customer Exist or New Customer
             if intCustomerID in Customer.arrCustomerIDs:
                 currentCustomer = findCustomer(customers, intCustomerID)
@@ -75,12 +82,21 @@ def runApp(bikeshop):
 
         elif menuInput == 2:
             print("\n------------------Rental Return------------------")
-            customerID = int(input("Enter Customer's ID Number: "))
-            currentCustomer = findCustomer(customers, customerID)
+            intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            while len(intCustomerID) !=5:
+                print("Invalid Customer ID")
+                intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            else:
+                intCustomerID = int(intCustomerID)
+
+            currentCustomer = findCustomer(customers, intCustomerID)
             if currentCustomer != False:
+                print("\n--------Invoice---------\n")
                 print("Current Customer:", currentCustomer.strName)
                 print("Rented", currentCustomer.bikes, currentCustomer.bikeType, "bikes")
                 print("Rental Time:", currentCustomer.rentalTime)
+                request = currentCustomer.returnBike()
+                bikeshop.returnBike(request)
 
         elif menuInput == 3:
             print("\n------------------Available Inventory------------------")
@@ -91,6 +107,10 @@ def runApp(bikeshop):
             print("\n------------------Daily Statistics------------------")
             print("Total Bikes Rented for Day:", bikeshop.intTotalRented)
             print("Total Revenue Collected for Day: $",bikeshop.dblTotalColected)
+            #for testing purposes added functional to increase rent day to make sure thar invioce is calculated right
+            for customer in customers:
+                increaseRentDay(customer)
+            
         elif menuInput == 5:
             #Exits the app
             print("\nGood Bye! \nSee you Tommorow!")
@@ -109,8 +129,13 @@ def findCustomer(listOfCustomers, id):
         return foundCustomer
 
     
-
+def increaseRentDay(customer):
+    print(customer.strName,customer.rentalTime, customer.bikes)
+    if customer.rentalTime:
+        customer.rentalTime += timedelta(days=-1)
 
 
 appStart()
+
+
     

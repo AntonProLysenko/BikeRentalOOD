@@ -91,7 +91,7 @@ class BikeRental:
             print("Number of bikes should be positive!")
             return None
         elif bikeType not in self.arrAvailableTypes:
-            print("Invalid bike type".format(self.stock))
+            print("Invalid bike type" )
             return None
         elif n > self.stock[bikeType]:
             print("Sorry! We have currently have {} {} bikes available to rent.".format(self.stock[bikeType], bikeType))
@@ -100,7 +100,7 @@ class BikeRental:
         else:
             now = datetime.now()                      
             print("You have rented {} bike(s) on daily basis today at {} hours.".format(n, now.hour))
-            print("You will be charged $20 for each day per bike.")
+            print("You will be charged $5 for each hour per bike.")
             print("We hope that you enjoy our service.")
             self.stock[bikeType] -= n
             self.intTotalRented+=n
@@ -162,6 +162,7 @@ class BikeRental:
             # family discount calculation
             if (3 <= numOfBikes <= 5):
                 print("You are eligible for Family rental promotion of 30% discount")
+                print("Subtotal before Discount: ${}".format(bill))
                 bill = bill * 0.7
             print("Thanks for returning your bike. Hope you enjoyed our service!")
             print("That would be ${}".format(bill))
@@ -273,10 +274,17 @@ class Customer:
         """
         Allows customers to return their bikes to the rental shop.
         """
+        returnRequest= ()
         if self.rentalBasis and self.rentalTime and self.bikes and self.bikeType:
-            return self.rentalTime, self.rentalBasis, self.bikes,  self.bikeType
+            returnRequest = self.rentalTime, self.rentalBasis, self.bikes,  self.bikeType
+            self.rentalTime = 0
+            self.rentalBasis = 0
+            self.bikes = 0
+            self.bikeType = 0
         else:
-            return 0,0,0,0
+            returnRequest =  0,0,0,0
+        
+        return returnRequest
 
 
 # Test Logic
