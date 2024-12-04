@@ -74,7 +74,7 @@ class BikeRental:
 
         # rent the bikes        
         else:
-            now = datetime.datetime.now()                      
+            now = datetime.now()                      
             print("You have rented a {} bike(s) on hourly basis today at {} hours.".format(n,now.hour))
             print("You will be charged $5 for each hour per bike.")
             print("We hope that you enjoy our service.")
@@ -202,19 +202,20 @@ class Customer:
     @idNumber.setter
     def idNumber(self, idNumber):
         blnValid = False
-        if type(idNumber) == int:
-            blnValid = True
-        else:
-            raise Exception("idNumber has to be numbers only!")
-
-        if blnValid:
-            if idNumber in Customer.arrCustomerIDs:
-                raise Exception("Customer with this ID Number already Exist")
+        while blnValid == False:
+            if type(idNumber) == int:
+                blnValid = True
             else:
-                blnValid=True
-        if blnValid:
-            Customer.arrCustomerIDs.append(idNumber)
-            self.__idNumber = idNumber
+                raise Exception("idNumber has to be numbers only!")
+
+            if blnValid:
+                if idNumber in Customer.arrCustomerIDs:
+                    raise Exception("Customer with this ID Number already Exist")
+                else:
+                    blnValid=True
+            if blnValid:
+                Customer.arrCustomerIDs.append(idNumber)
+                self.__idNumber = idNumber
 
 
     
@@ -223,38 +224,43 @@ class Customer:
         Takes a request from the customer for the number of bikes.
         """
         blnValid = False
-                      
-        bikes = input("How many bikes would you like to rent?")
-        
-        # implement logic for invalid input
-        try:
-            bikes = int(bikes)
-            blnValid = True
-        except ValueError:
-            print("That's not a positive integer!")
-            blnValid = False
-            # return -1
-        
-        if bikes < 1:
-            print("Invalid input. Number of bikes should be greater than zero!")
-            blnValid = False
-            # return -1
-        else:
-            blnValid = True
-            self.bikes = bikes
-
-        if blnValid:
-            if self.bikes>0:
-                bikeType = input("What type of bikes you'd like to rent?").strip().lower()
-            else:
-                bikeType = input("What type of bike you'd like to rent?").strip().lower()
+        if self.bikes == 0:
+                        
+            bikes = input("How many bikes would you like to rent? ")
             
-            if bikeType in self.arrAvailableTypes:
+            # implement logic for invalid input
+            try:
+                bikes = int(bikes)
                 blnValid = True
-                self.bikeType = bikeType
-            else:
-                print("Invalid input. You can only rent mountain, road or touring bike from us")
+            except ValueError:
+                print("\t\tError!\nThat's not a positive integer!")
                 blnValid = False
+                # return -1
+            
+            if bikes < 1:
+                print("\t\tError!\nInvalid input. Number of bikes should be greater than zero!")
+                blnValid = False
+                # return -1
+            else:
+                blnValid = True
+                self.bikes = bikes
+
+            if blnValid:
+                if self.bikes>0:
+                    bikeType = input("What type of bikes you'd like to rent? ").strip().lower()
+                else:
+                    bikeType = input("What type of bike you'd like to rent? ").strip().lower()
+                
+                if bikeType in BikeRental.arrAvailableTypes:
+                    blnValid = True
+                    self.bikeType = bikeType
+                else:
+                    print("\t\tError!\nInvalid input. You can only rent mountain, road or touring bike from us")
+                    blnValid = False
+        else:
+            print(self.strName,"Already has", self.bikes," bikes in use. \nReturn rented inventory first")
+            blnValid = False
+
 
         if blnValid:
             return self.bikes, self.bikeType
@@ -276,10 +282,10 @@ class Customer:
 # Test Logic
 
 # Create Shops and stock and demonstrate checking inventory
-#shop1 = BikeRental({'mountain': 12, 'road': 12, 'touring': 32})
+# shop1 = BikeRental({'mountain': 12, 'road': 12, 'touring': 32})
 #shop2 = BikeRental()
 
-#shop1.displaystock()
+# shop1.displaystock()
 
 #shop1.rentBikeOnHourlyBasis(31, "mountain")
 #shop2.rentBikeOnDailyBasis(-1, "road")
@@ -291,43 +297,43 @@ class Customer:
 
 ## Create Customers
  
-#customer1 = Customer("Anton", 12345)
+# customer1 = Customer("Anton", 12345)
 #customer2 = Customer("Bob", 54321)
 #customer3 = Customer("Kate", 43213)
 #customer4 = Customer("Nick", 89432)
 
 ## Set up rental basis
-#customer1.rentalBasis = 1 # hourly
+# customer1.rentalBasis = 1 # hourly
 #customer2.rentalBasis = 1 # hourly
 #customer3.rentalBasis = 2 # daily
 #customer4.rentalBasis = 2 # daily
 
 ## determine number of bikes
-#customer1.bikes = 1
-#customer2.bikes = 5 # eligible for family discount 30%
+# customer1.bikes = 1
+#customer1.bikes = 5 # eligible for family discount 30%
 #customer3.bikes = 2
-#customer4.bikes = 0
+# customer1.bikes = 0
 
 ## detrmine rental time
-#customer1.rentalTime = datetime.now() + timedelta(hours=-4)
+# customer1.rentalTime = datetime.now() + timedelta(hours=-4)
 #customer2.rentalTime = datetime.now() + timedelta(hours=-23)
 #customer3.rentalTime = datetime.now() + timedelta(days=-4)
 #customer4.rentalTime = datetime.now() + timedelta(days=-14)
 ## determine bike type
-#customer1.bikeType = "mountain" 
+# customer1.bikeType = "mountain" 
 #customer2.bikeType = "road" 
 #customer3.bikeType = "touring" 
 #customer4.bikeType = "road" 
 
 
 ## create request to return the bike
-#request1 = customer1.returnBike()
+# request1 = customer1.returnBike()
 #request2 = customer2.returnBike()
 #request3 = customer3.returnBike()
 #request4 = customer4.returnBike()
 #print("req", request1)
 ## return the bike to shop and get a bill
-#shop1.returnBike(request1) 
+# shop1.returnBike(request1) 
 #shop1.returnBike(request2) 
 #shop1.returnBike(request3) 
 #shop1.returnBike(request4) 
