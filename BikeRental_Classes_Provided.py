@@ -26,16 +26,27 @@ class BikeRental:
                     blnValid = False
                     raise Exception("Invalid Bike type entered, Stock has to be a dictionaty of 3 key value pairs of 'mountain', 'touring' and 'road', with value of the amount of bikes available!\n You entered: {}".format(key))
 
-                if val < 0:
+
+                if type(val) != int:
                     blnValid = False
-                    raise Exception("Invalid amount of bikes! Amount of Bikes cannot be less than 0\n You entered:{}".format(val))
+                    print("Invalid input! Amount of Bikes Has to me integer. \nYou entered:{}".format(val))
                 else:
                     blnValid = True
+
+
+                if blnValid:
+                    if val < 0:
+                        blnValid = False
+                        print("Invalid amount of bikes! Amount of Bikes cannot be less than 0\n You entered:{}".format(val))
+                    else:
+                        blnValid = True
         else:
             blnValid = False
             raise Exception("Invalid Shop Stock datatype! Stock has to be a dectionaty of 3 key value pairs of 'mountain', 'touring' and 'road', with value of the amount of bikes available!\n You entered: {}".format(stock))
         if blnValid:
             self.__stock = stock
+        else:
+            self.__stock = False
     
     def displaystock(self):
         """
@@ -193,7 +204,7 @@ class Customer:
     @name.setter
     def strName(self, strName):
         if strName == None or strName == "":
-            raise Exception(f"Name is required, the value of strFirstName was{strName}")
+            raise Exception("Name is required, the value of strFirstName was{}".format(strName))
         else:
             self.__strName = strName
 

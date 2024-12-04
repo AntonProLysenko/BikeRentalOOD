@@ -13,13 +13,28 @@ def appStart():
     
     print("\n\n-------------Welcome to the Bikeshop!------------------\n\n")
     print("\nLet's establish your inventory\n")
+    #Gathering Inital inventory with validation
+  
+    bikeshop = None
+    while not bikeshop or bikeshop.stock == False:
+        try:
+            mountainBikes = input("\nHow many MOUNTAIN bikes your have available for rent?: ")
+            roadBikes = input("How many ROAD bikes your have available for rent?: ")
+            touringBikes = input("How many Touring bikes your have available for rent?: ")
 
-    mountainBikes = int(input("How many MOUNTAIN bikes your have available for rent?: "))
-    roadBikes = int(input("How many ROAD bikes your have available for rent?: "))
-    touringBikes = int(input("How many Touring bikes your have available for rent?: "))
+            if int(mountainBikes)>= 0 and int(roadBikes) >= 0 and int(touringBikes)>=0:
+                bikeshop = Bikeshop({"mountain": int(mountainBikes), "road": int(roadBikes), "touring": int(touringBikes)})
+                break
+            else:
+                print("Invalid input of bike amount")
+            if bikeshop.stock == False:
+                print("Invalid amount of bikes entered. Re-enter your inventory inventory.")
+        except Exception as e:
+            print("Error: {}".format(e))
+    runApp(bikeshop)
 
-    bikeshop1 = Bikeshop({"mountain": mountainBikes, "road": roadBikes, "touring": touringBikes})
-    runApp(bikeshop1)
+
+
 
 def runApp(bikeshop):
     """
@@ -44,11 +59,18 @@ def runApp(bikeshop):
             #Gathering Customer's info
             strCustomerName = input("Enter Customer's Name: ")
             intCustomerID = (input("Enter Customer's 5 digit ID: "))
+            
+            #Input Validation
+            while len(strCustomerName)<=0:
+                print("Invalid Customer Name")
+                intCustomerID = (input("Enter Customer's 5 digit ID: "))
+
             while len(intCustomerID) !=5:
                  print("Invalid Customer ID")
                  intCustomerID = (input("Enter Customer's 5 digit ID: "))
             else:
                 intCustomerID = int(intCustomerID)
+
             #If Customer Exist or New Customer
             if intCustomerID in Customer.arrCustomerIDs:
                 currentCustomer = findCustomer(customers, intCustomerID)
@@ -58,9 +80,9 @@ def runApp(bikeshop):
             
             #Gathering Rental Information
             customerRequest = currentCustomer.requestBike()
-            #Showing Discount Alegibility
 
             if customerRequest !=-1:
+                #Showing Discount Alegibility
                 if customerRequest[0]>=3 and customerRequest[0]<=5:
                     print("\nWoohoo! Tou are aligible for Family Discount!\n")
                 print("How would you like to rent the bike?")
